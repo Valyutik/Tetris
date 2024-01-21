@@ -22,7 +22,7 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
 
         #endregion
 
-        private void MoveShape(Vector2Int deltaMove)
+        public void MoveShape(Vector2Int deltaMove)
         {
             if (!CheckMovePossible(deltaMove))
             {
