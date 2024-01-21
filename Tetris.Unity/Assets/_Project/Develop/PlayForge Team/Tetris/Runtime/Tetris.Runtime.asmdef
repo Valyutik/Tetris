@@ -1,0 +1,14 @@
+{
+    "name": "Tetris.Runtime",
+    "rootNamespace": "PlayForge_Team.Tetris.Runtime",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

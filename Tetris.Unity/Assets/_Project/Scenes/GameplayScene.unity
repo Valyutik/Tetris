@@ -289,6 +289,7 @@ GameObject:
   m_Component:
   - component: {fileID: 523962903}
   - component: {fileID: 523962904}
+  - component: {fileID: 523962905}
   m_Layer: 0
   m_Name: GameField
   m_TagString: Untagged
@@ -364,6 +365,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &523962905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523962902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39ebc796383340d780a0332c8500fbf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstCellPoint: {fileID: 640288373}
+  cellSize: {x: 0.8, y: 0.8}
+  fieldSize: {x: 10, y: 22}
 --- !u!1 &640288372
 GameObject:
   m_ObjectHideFlags: 0
