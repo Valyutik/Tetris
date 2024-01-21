@@ -1,4 +1,5 @@
-﻿using PlayForge_Team.Tetris.Runtime.GameFields;
+﻿using System.Collections.Generic;
+using PlayForge_Team.Tetris.Runtime.GameFields;
 using UnityEngine;
 using System.Linq;
 
@@ -16,11 +17,17 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
 
         private void Update()
         {
+            SetShapePartCellsEmpty(true);
             HorizontalMove();
             VerticalMove();
             Rotate();
+            
+            var reachBottom = CheckBottom();
+            var reachOtherShape = CheckOtherShape();
 
-            if (CheckBottom())
+            SetShapePartCellsEmpty(false);
+
+            if (reachBottom || reachOtherShape)
             {
                 gameStateChanger.SpawnNextShape();
             }
@@ -51,23 +58,40 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
         
         private void Rotate()
         {
-            if (!Input.GetKeyDown(KeyCode.UpArrow) && !Input.GetKeyDown(KeyCode.W)) return;
-            _targetShape.Rotate();
-            UpdateByWalls();
-            UpdateByBottom();
-            SetShapeInCells();
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+            {
+                var startCellIds = _targetShape.GetPartCellIds();
+
+                _targetShape.Rotate();
+                UpdateByWalls();
+                UpdateByBottom();
+
+                var shapeSet = TrySetShapeInCells();
+
+                if (!shapeSet)
+                {
+                    MoveShapeToCellIds(_targetShape, startCellIds);
+                }
+            }
         }
 
-        private void SetShapeInCells()
+        private bool TrySetShapeInCells()
         {
-            foreach (var t in _targetShape.parts)
+            foreach (var shapePart in _targetShape.parts)
             {
-                Vector2 shapePartPosition = t.transform.position;
+                Vector2 shapePartPosition = shapePart.transform.position;
                 var newPartCellId = gameField.GetNearestCellId(shapePartPosition);
+
+                if (!gameField.GetCellEmpty(newPartCellId))
+                {
+                    return false;
+                }
+                
                 var newPartPosition = gameField.GetCellPosition(newPartCellId);
-                t.cellId = newPartCellId;
-                t.SetPosition(newPartPosition);
+                shapePart.cellId = newPartCellId;
+                shapePart.SetPosition(newPartPosition);
             }
+            return true;
         }
         
         private void HorizontalMove()
@@ -100,9 +124,23 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
         
         private bool CheckMovePossible(Vector2Int deltaMove)
         {
-            return _targetShape.parts.Select(t => t.cellId + deltaMove).All(newPartCellId =>
-                newPartCellId is { x: >= 0, y: >= 0 } && newPartCellId.x < gameField.FieldSize.x &&
-                newPartCellId.y < gameField.FieldSize.y);
+            foreach (var t in _targetShape.parts)
+            {
+                var newPartCellId = t.cellId + deltaMove;
+
+                if (newPartCellId.x < 0 || newPartCellId.y < 0 || newPartCellId.x >= gameField.FieldSize.x ||
+                    newPartCellId.y >= gameField.FieldSize.y)
+                {
+                    return false;
+                }
+
+                if (!gameField.GetCellEmpty(newPartCellId))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
         
         private void UpdateByWalls()
@@ -119,7 +157,7 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
                 {
                     foreach (var part in _targetShape.parts)
                     {
-                        part.transform.position += (right ? -1 : 1) * Vector3.right * gameField.CellSize.x;
+                        part.transform.position += Vector3.right * ((right ? -1 : 1) * gameField.CellSize.x);
                     }
                 }
             }
@@ -179,6 +217,36 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
             wallDistance = GetRoundedWallDistance(wallDistance);
             
             return wallDistance != 0 && wallDistance < 0;
+        }
+        
+        private bool CheckOtherShape()
+        {
+            return _targetShape.parts.Any(t => !gameField.GetCellEmpty(t.cellId + Vector2Int.down));
+        }
+        
+        private void SetShapePartCellsEmpty(bool value)
+        {
+            foreach (var shapePart in _targetShape.parts)
+            {
+                gameField.SetCellEmpty(shapePart.cellId, value);
+            }
+        }
+        
+        private void MoveShapeToCellIds(Shape shape, IReadOnlyList<Vector2Int> cellIds)
+        {
+            for (var i = 0; i < shape.parts.Length; i++)
+            {
+                MoveShapePartToCellId(shape.parts[i], cellIds[i]);
+            }
+        }
+        
+        private void MoveShapePartToCellId(ShapePart part, Vector2Int cellId)
+        {
+            var newPartPosition = gameField.GetCellPosition(cellId);
+
+            part.cellId = cellId;
+
+            part.SetPosition(newPartPosition);
         }
     }
 }

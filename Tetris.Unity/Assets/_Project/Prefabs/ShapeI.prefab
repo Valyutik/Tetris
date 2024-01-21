@@ -36,6 +36,10 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4442869266164509383, guid: b7ef5fd78ffa5f8458273ada1179bbda, type: 3}
+      propertyPath: extraSpawnYMove
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4686043948342666087, guid: b7ef5fd78ffa5f8458273ada1179bbda, type: 3}
       propertyPath: cellId.x
       value: 0
@@ -114,7 +118,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7475585532841150249, guid: b7ef5fd78ffa5f8458273ada1179bbda, type: 3}
       propertyPath: cellId.y
-      value: 2
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 8637046392305674225, guid: b7ef5fd78ffa5f8458273ada1179bbda, type: 3}
       propertyPath: m_LocalPosition.x

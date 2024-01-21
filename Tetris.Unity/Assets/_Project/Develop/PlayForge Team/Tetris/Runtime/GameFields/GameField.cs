@@ -34,8 +34,8 @@ namespace PlayForge_Team.Tetris.Runtime.GameFields
 
             return cell?.GetPosition() ?? Vector2.zero;
         }
-        
-        public Vector2 GetCellPosition(int x, int y)
+
+        private Vector2 GetCellPosition(int x, int y)
         {
             var cell = GetCell(x, y);
 
@@ -67,6 +67,24 @@ namespace PlayForge_Team.Tetris.Runtime.GameFields
                 }
             }
             return new Vector2Int(resultX, resultY);
+        }
+        
+        public void SetCellEmpty(Vector2Int cellId, bool value)
+        {
+            var cell = GetCell(cellId.x, cellId.y);
+
+            cell?.SetIsEmpty(value);
+        }
+        
+        public bool GetCellEmpty(Vector2Int cellId)
+        {
+            var cell = GetCell(cellId.x, cellId.y);
+
+            if (cell == null)
+            {
+                return false;
+            }
+            return cell.GetIsEmpty();
         }
         
         private GameFieldCell GetCell(int x, int y)

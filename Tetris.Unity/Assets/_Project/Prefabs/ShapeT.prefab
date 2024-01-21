@@ -100,6 +100,10 @@ PrefabInstance:
       propertyPath: cellId.y
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 8655853121741725207, guid: 3c7621c3a94a5874d84196a8b509e37e, type: 3}
+      propertyPath: extraSpawnYMove
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
