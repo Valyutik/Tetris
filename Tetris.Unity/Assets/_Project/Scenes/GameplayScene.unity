@@ -452,6 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39ebc796383340d780a0332c8500fbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  invisibleYFieldSize: 4
   firstCellPoint: {fileID: 640288373}
   cellSize: {x: 0.8, y: 0.8}
   fieldSize: {x: 10, y: 26}
@@ -862,6 +863,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4b8ee3ebc647edb3b7c66967c5b5e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameScreen: {fileID: 1502381216}
+  gameEndScreen: {fileID: 59757192}
   shapeSpawner: {fileID: 1968421895}
   gameField: {fileID: 523962905}
   shapeMover: {fileID: 906169083}

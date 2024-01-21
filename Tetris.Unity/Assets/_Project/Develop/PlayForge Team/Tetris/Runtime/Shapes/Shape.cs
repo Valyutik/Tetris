@@ -5,6 +5,7 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
 {
     public class Shape : MonoBehaviour
     {
+        public int ExtraSpawnYMove => extraSpawnYMove;
         public ShapePart[] parts = Array.Empty<ShapePart>();
         [SerializeField] private int extraSpawnYMove;
         

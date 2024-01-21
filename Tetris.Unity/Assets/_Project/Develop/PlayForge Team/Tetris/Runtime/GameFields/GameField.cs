@@ -4,10 +4,12 @@ namespace PlayForge_Team.Tetris.Runtime.GameFields
 {
     public sealed class GameField : MonoBehaviour
     {
+        public int InvisibleYFieldSize => invisibleYFieldSize;
         public Vector2Int FieldSize => fieldSize;
         public Vector2 CellSize => cellSize;
         public Transform FirstCellPoint => firstCellPoint;
         
+        [SerializeField] private int invisibleYFieldSize = 4;
         [SerializeField] private Transform firstCellPoint;
         [SerializeField] private Vector2 cellSize;
         [SerializeField] private Vector2Int fieldSize;

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using PlayForge_Team.Tetris.Runtime.GameFields;
+﻿using PlayForge_Team.Tetris.Runtime.GameFields;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
@@ -12,11 +12,17 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
         [SerializeField] private float moveDownDelay = 0.8f;
         private Shape _targetShape;
         private float _moveDownTimer;
+        private bool _isActive;
 
         #region MONO
 
         private void Update()
         {
+            if (!_isActive)
+            {
+                return;
+            }
+            
             SetShapePartCellsEmpty(true);
             HorizontalMove();
             VerticalMove();
@@ -29,11 +35,23 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
 
             if (reachBottom || reachOtherShape)
             {
-                gameStateChanger.SpawnNextShape();
+                if (CheckShapeTopOver())
+                {
+                    gameStateChanger.EndGame();
+                }
+                else
+                {
+                    gameStateChanger.SpawnNextShape();
+                }
             }
         }
 
         #endregion
+        
+        public void SetActive(bool value)
+        {
+            _isActive = value;
+        }
 
         public void MoveShape(Vector2Int deltaMove)
         {
@@ -73,6 +91,16 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
                     MoveShapeToCellIds(_targetShape, startCellIds);
                 }
             }
+        }
+        
+        private bool CheckShapeTopOver()
+        {
+            var topCellYPosition = gameField.FirstCellPoint.position.y +
+                                   (gameField.FieldSize.y - gameField.InvisibleYFieldSize - 2) * gameField.CellSize.y;
+
+            return _targetShape.parts.Select(t => t.transform.position.y - topCellYPosition)
+                .Select(GetRoundedWallDistance)
+                .Any(wallDistance => wallDistance != 0 && wallDistance > 0);
         }
 
         private bool TrySetShapeInCells()
