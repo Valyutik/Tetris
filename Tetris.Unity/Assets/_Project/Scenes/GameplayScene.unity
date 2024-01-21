@@ -156,6 +156,7 @@ Transform:
   - {fileID: 1031665007}
   - {fileID: 523962903}
   - {fileID: 906169082}
+  - {fileID: 1968421894}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &363830956
@@ -457,8 +458,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cfc074c87664d9daf434b3f03f093d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameStateChanger: {fileID: 1031665008}
   gameField: {fileID: 523962905}
-  targetShape: {fileID: 0}
   moveDownDelay: 0.8
 --- !u!1 &1031665006
 GameObject:
@@ -504,8 +505,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4b8ee3ebc647edb3b7c66967c5b5e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shapeSpawner: {fileID: 1968421895}
   gameField: {fileID: 523962905}
   shapeMover: {fileID: 906169083}
+--- !u!1 &1968421893
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1968421894}
+  - component: {fileID: 1968421895}
+  m_Layer: 0
+  m_Name: ShapeSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1968421894
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968421893}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 219071122}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1968421895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968421893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcf651390a604f44b759ae67865ab23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shapePrefabs:
+  - {fileID: 3950049574996664809, guid: f29852fa70524d74188b07df52ecd478, type: 3}
+  - {fileID: 5215941619355303194, guid: 4d08f96ae30b8ee44ba0f3a35b097171, type: 3}
+  - {fileID: 8655853121741725207, guid: 3c7621c3a94a5874d84196a8b509e37e, type: 3}
+  - {fileID: 2898638467453837998, guid: 7af1b46fd7387e24cb9c420a32a0ba5e, type: 3}
+  - {fileID: 1105471252888900467, guid: 7985234dab48f194eb23667f9110a5c0, type: 3}
+  - {fileID: 1816911849977510637, guid: b02fcb361048f6b46a7b5e1ded850b5a, type: 3}
+  - {fileID: 1943446795669231721, guid: 2a9a6de29ebb73345816b55b5f07e31d, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

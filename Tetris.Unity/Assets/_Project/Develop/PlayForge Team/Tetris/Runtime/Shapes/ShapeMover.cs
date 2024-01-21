@@ -6,10 +6,10 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
 {
     public sealed class ShapeMover : MonoBehaviour
     {
-        
+        [SerializeField] private GameStateChanger gameStateChanger;
         [SerializeField] private GameField gameField;
-        [SerializeField] private Shape targetShape;
         [SerializeField] private float moveDownDelay = 0.8f;
+        private Shape _targetShape;
         private float _moveDownTimer;
 
         #region MONO
@@ -18,6 +18,11 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
         {
             HorizontalMove();
             VerticalMove();
+            
+            if (CheckBottom())
+            {
+                gameStateChanger.SpawnNextShape();
+            }
         }
 
         #endregion
@@ -29,13 +34,18 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
                 return;
             }
 
-            foreach (var shapePart in targetShape.parts)
+            foreach (var shapePart in _targetShape.parts)
             {
                 var newPartCellId = shapePart.cellId + deltaMove;
                 var newPartPosition = gameField.GetCellPosition(newPartCellId);
                 shapePart.cellId = newPartCellId;
                 shapePart.SetPosition(newPartPosition);
             }
+        }
+        
+        public void SetTargetShape(Shape targetShape)
+        {
+            _targetShape = targetShape;
         }
         
         private void HorizontalMove()
@@ -48,6 +58,11 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
             {
                 MoveShape(Vector2Int.right);
             }
+        }
+        
+        private bool CheckBottom()
+        {
+            return _targetShape.parts.Any(t => t.cellId.y == 0);
         }
 
         private void VerticalMove()
@@ -63,7 +78,7 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
         
         private bool CheckMovePossible(Vector2Int deltaMove)
         {
-            return targetShape.parts.Select(t => t.cellId + deltaMove).All(newPartCellId =>
+            return _targetShape.parts.Select(t => t.cellId + deltaMove).All(newPartCellId =>
                 newPartCellId is { x: >= 0, y: >= 0 } && newPartCellId.x < gameField.FieldSize.x &&
                 newPartCellId.y < gameField.FieldSize.y);
         }
