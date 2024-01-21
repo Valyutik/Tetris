@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PlayForge_Team.Tetris.Runtime
+namespace PlayForge_Team.Tetris.Runtime.GameFields
 {
     public sealed class GameFieldCell
     {

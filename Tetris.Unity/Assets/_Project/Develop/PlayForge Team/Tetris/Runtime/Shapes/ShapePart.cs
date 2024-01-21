@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PlayForge_Team.Tetris.Runtime
+namespace PlayForge_Team.Tetris.Runtime.Shapes
 {
     public sealed class ShapePart : MonoBehaviour
     {
