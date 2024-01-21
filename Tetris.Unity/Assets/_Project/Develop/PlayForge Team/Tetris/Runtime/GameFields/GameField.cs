@@ -5,6 +5,8 @@ namespace PlayForge_Team.Tetris.Runtime.GameFields
     public sealed class GameField : MonoBehaviour
     {
         public Vector2Int FieldSize => fieldSize;
+        public Vector2 CellSize => cellSize;
+        public Transform FirstCellPoint => firstCellPoint;
         
         [SerializeField] private Transform firstCellPoint;
         [SerializeField] private Vector2 cellSize;
@@ -31,6 +33,40 @@ namespace PlayForge_Team.Tetris.Runtime.GameFields
             var cell = GetCell(cellId.x, cellId.y);
 
             return cell?.GetPosition() ?? Vector2.zero;
+        }
+        
+        public Vector2 GetCellPosition(int x, int y)
+        {
+            var cell = GetCell(x, y);
+
+            if (cell == null)
+            {
+                return Vector2.zero;
+            }
+            return cell.GetPosition();
+        }
+
+        public Vector2Int GetNearestCellId(Vector2 position)
+        {
+            var resultDistance = float.MaxValue;
+            int resultX = 0, resultY = 0;
+            
+            for (var i = 0; i < FieldSize.x; i++)
+            {
+                for (var j = 0; j < FieldSize.y; j++)
+                {
+                    var cellPosition = GetCellPosition(i, j);
+                    var distance = (cellPosition - position).magnitude;
+                    
+                    if (distance < resultDistance)
+                    {
+                        resultDistance = distance;
+                        resultX = i;
+                        resultY = j;
+                    }
+                }
+            }
+            return new Vector2Int(resultX, resultY);
         }
         
         private GameFieldCell GetCell(int x, int y)
