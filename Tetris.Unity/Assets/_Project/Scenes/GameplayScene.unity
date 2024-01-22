@@ -735,7 +735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameStateChanger: {fileID: 1031665008}
   gameField: {fileID: 523962905}
-  moveDownDelay: 0.8
+  moveDownDelay: 0.3
 --- !u!1 &990951259
 GameObject:
   m_ObjectHideFlags: 0
