@@ -41,11 +41,7 @@ namespace PlayForge_Team.Tetris.Runtime.GameFields
         {
             var cell = GetCell(x, y);
 
-            if (cell == null)
-            {
-                return Vector2.zero;
-            }
-            return cell.GetPosition();
+            return cell?.GetPosition() ?? Vector2.zero;
         }
 
         public Vector2Int GetNearestCellId(Vector2 position)
@@ -82,11 +78,7 @@ namespace PlayForge_Team.Tetris.Runtime.GameFields
         {
             var cell = GetCell(cellId.x, cellId.y);
 
-            if (cell == null)
-            {
-                return false;
-            }
-            return cell.GetIsEmpty();
+            return cell != null && cell.GetIsEmpty();
         }
         
         private GameFieldCell GetCell(int x, int y)
