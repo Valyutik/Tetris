@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System;
 
 namespace PlayForge_Team.Tetris.Runtime.Shapes
@@ -20,6 +21,27 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
                 startCellIds[i] = parts[i].cellId;
             }
             return startCellIds;
+        }
+        
+        public void RemovePart(ShapePart part)
+        {
+            foreach (var shapePart in parts)
+            {
+                if (shapePart == part)
+                {
+                    part.SetActive(false);
+                }
+            }
+        }
+        
+        public bool CheckNeedDestroy()
+        {
+            return parts.All(t => !t.GetActive());
+        }
+        
+        public bool CheckContainsCellId(Vector2Int cellId)
+        {
+            return parts.Any(t => t.cellId == cellId);
         }
     }
 }

@@ -36,6 +36,27 @@ namespace PlayForge_Team.Tetris.Runtime.GameFields
 
             return cell?.GetPosition() ?? Vector2.zero;
         }
+        
+        public bool[] GetRowFillings()
+        {
+            var rowFillings = new bool[FieldSize.y - InvisibleYFieldSize];
+
+            for (var j = 0; j < rowFillings.Length; j++)
+            {
+                var isRowFilled = true;
+
+                for (var i = 0; i < FieldSize.x; i++)
+                {
+                    if (_cells[i,j].GetIsEmpty())
+                    {
+                        isRowFilled = false;
+                        break;
+                    }
+                }
+                rowFillings[j] = isRowFilled;
+            }
+            return rowFillings;
+        }
 
         private Vector2 GetCellPosition(int x, int y)
         {

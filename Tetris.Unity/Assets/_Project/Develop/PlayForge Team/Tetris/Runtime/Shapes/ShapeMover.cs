@@ -10,6 +10,7 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
         [SerializeField] private GameStateChanger gameStateChanger;
         [SerializeField] private GameField gameField;
         [SerializeField] private float moveDownDelay = 0.8f;
+        private readonly List<Shape> _allShapes = new();
         private Shape _targetShape;
         private float _moveDownTimer;
         private bool _isActive;
@@ -22,32 +23,28 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
             {
                 return;
             }
-            
-            SetShapePartCellsEmpty(true);
+
+            SetShapePartCellsEmpty(_targetShape, true);
+
             HorizontalMove();
             VerticalMove();
             Rotate();
-            
+
             var reachBottom = CheckBottom();
             var reachOtherShape = CheckOtherShape();
-
-            SetShapePartCellsEmpty(false);
-
+            
+            SetShapePartCellsEmpty(_targetShape, false);
+            
             if (reachBottom || reachOtherShape)
             {
-                if (CheckShapeTopOver())
-                {
-                    gameStateChanger.EndGame();
-                }
-                else
-                {
-                    gameStateChanger.SpawnNextShape();
-                }
+                EndMovement();
             }
         }
 
         #endregion
-        
+
+        #region Public methods
+
         public void SetActive(bool value)
         {
             _isActive = value;
@@ -62,17 +59,21 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
 
             foreach (var shapePart in _targetShape.parts)
             {
-                var newPartCellId = shapePart.cellId + deltaMove;
-                var newPartPosition = gameField.GetCellPosition(newPartCellId);
-                shapePart.cellId = newPartCellId;
-                shapePart.SetPosition(newPartPosition);
+                MoveShapePart(shapePart, deltaMove);
             }
         }
         
         public void SetTargetShape(Shape targetShape)
         {
             _targetShape = targetShape;
+
+            if (!_allShapes.Contains(targetShape))
+            {
+                _allShapes.Add(targetShape);
+            }
         }
+
+        #endregion
         
         private void Rotate()
         {
@@ -91,6 +92,22 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
                     MoveShapeToCellIds(_targetShape, startCellIds);
                 }
             }
+        }
+        
+        private void SetShapePartCellEmpty(ShapePart part, bool value)
+        {
+            if (!part.GetActive())
+            {
+                return;
+            }
+            gameField.SetCellEmpty(part.cellId, value);
+        }
+        
+        private void MoveShapePart(ShapePart part, Vector2Int deltaMove)
+        {
+            var newPartCellId = part.cellId + deltaMove;
+
+            MoveShapePartToCellId(part, newPartCellId);
         }
         
         private bool CheckShapeTopOver()
@@ -147,6 +164,19 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
             {
                 _moveDownTimer = 0;
                 MoveShape(Vector2Int.down);
+            }
+        }
+        
+        private void EndMovement()
+        {
+            if (CheckShapeTopOver())
+            {
+                gameStateChanger.EndGame();
+            }
+            else
+            {
+                TryRemoveFilledRows();
+                gameStateChanger.SpawnNextShape();
             }
         }
         
@@ -252,11 +282,62 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
             return _targetShape.parts.Any(t => !gameField.GetCellEmpty(t.cellId + Vector2Int.down));
         }
         
-        private void SetShapePartCellsEmpty(bool value)
+        private void SetShapePartCellsEmpty(Shape shape, bool value)
         {
-            foreach (var shapePart in _targetShape.parts)
+            foreach (var shapePart in shape.parts)
             {
-                gameField.SetCellEmpty(shapePart.cellId, value);
+                SetShapePartCellEmpty(shapePart, value);
+            }
+        }
+        
+        private void TryRemoveFilledRows()
+        {
+            var rowFillings = gameField.GetRowFillings();
+
+            for (var i = rowFillings.Length - 1; i >= 0; i--)
+            {
+                if (rowFillings[i])
+                {
+                    RemoveRow(i);
+                }
+            }
+        }
+
+        private void RemoveRow(int id)
+        {
+            for (var i = 0; i < gameField.FieldSize.y - gameField.InvisibleYFieldSize; i++)
+            {
+                for (var j = 0; j < _allShapes.Count; j++)
+                {
+                    var shape = _allShapes[j];
+
+                    foreach (var shapePart in shape.parts)
+                    {
+                        if (shapePart.cellId.y != i || !shapePart.GetActive())
+                        {
+                            continue;
+                        }
+                        
+                        if (shapePart.cellId.y > id)
+                        {
+                            SetShapePartCellEmpty(shapePart, true);
+                            MoveShapePart(shapePart, Vector2Int.down);
+                            SetShapePartCellEmpty(shapePart, false);
+                        }
+                        else if (shapePart.cellId.y == id)
+                        {
+                            SetShapePartCellEmpty(shapePart, true);
+                            shape.RemovePart(shapePart);
+                            
+                            if (shape.CheckNeedDestroy())
+                            {
+                                _allShapes.Remove(shape);
+                                Destroy(shape.gameObject);
+                                j--;
+                            }
+                        }
+                    }
+                }
             }
         }
         
