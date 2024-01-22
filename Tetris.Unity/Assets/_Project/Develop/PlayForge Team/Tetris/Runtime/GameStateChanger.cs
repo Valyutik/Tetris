@@ -27,7 +27,8 @@ namespace PlayForge_Team.Tetris.Runtime
 
         public void RestartGame()
         {
-            
+            shapeMover.DestroyAllShapes();
+            StartGame();
         }
         
         public void EndGame()

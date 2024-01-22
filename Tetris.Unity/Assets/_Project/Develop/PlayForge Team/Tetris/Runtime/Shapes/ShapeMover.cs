@@ -63,6 +63,17 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
             }
         }
         
+        public void DestroyAllShapes()
+        {
+            for (var i = _allShapes.Count - 1; i >= 0; i--)
+            {
+                var shape = _allShapes[i];
+
+                SetShapePartCellsEmpty(shape, true);
+                DestroyShape(shape);
+            }
+        }
+        
         public void SetTargetShape(Shape targetShape)
         {
             _targetShape = targetShape;
@@ -74,6 +85,12 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
         }
 
         #endregion
+        
+        private void DestroyShape(Shape shape)
+        {
+            _allShapes.Remove(shape);
+            Destroy(shape.gameObject);
+        }
         
         private void Rotate()
         {
@@ -331,8 +348,7 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
                             
                             if (shape.CheckNeedDestroy())
                             {
-                                _allShapes.Remove(shape);
-                                Destroy(shape.gameObject);
+                                DestroyShape(shape);
                                 j--;
                             }
                         }
