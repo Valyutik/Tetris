@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using PlayForge_Team.Tetris.Runtime.UI;
 
 namespace PlayForge_Team.Tetris.Runtime.Shapes
 {
     public sealed class ShapeMover : MonoBehaviour
     {
+        [SerializeField] private Score score;
+        [SerializeField] private int scoreByShape = 1;
+        [SerializeField] private int scoreByRow = 10;
         [SerializeField] private GameStateChanger gameStateChanger;
         [SerializeField] private GameField gameField;
         [SerializeField] private float moveDownDelay = 0.8f;
@@ -194,6 +198,7 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
             {
                 TryRemoveFilledRows();
                 gameStateChanger.SpawnNextShape();
+                score.AddScore(scoreByShape);
             }
         }
         
@@ -355,6 +360,7 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
                     }
                 }
             }
+            score.AddScore(scoreByRow);
         }
         
         private void MoveShapeToCellIds(Shape shape, IReadOnlyList<Vector2Int> cellIds)
