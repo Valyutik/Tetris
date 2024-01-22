@@ -872,6 +872,7 @@ MonoBehaviour:
   score: {fileID: 1644140519}
   scoreByShape: 1
   scoreByRow: 10
+  FastDownTimeSpeed: 2
   gameStateChanger: {fileID: 1031665008}
   gameField: {fileID: 523962905}
   moveDownDelay: 0.3

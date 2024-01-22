@@ -8,6 +8,7 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
 {
     public sealed class ShapeMover : MonoBehaviour
     {
+        [SerializeField] private float fastDownTimeSpeed = 2f;
         [SerializeField] private Score score;
         [SerializeField] private int scoreByShape = 1;
         [SerializeField] private int scoreByRow = 10;
@@ -181,7 +182,12 @@ namespace PlayForge_Team.Tetris.Runtime.Shapes
         {
             _moveDownTimer += Time.deltaTime;
 
-            if(_moveDownTimer >= moveDownDelay || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            {
+                _moveDownTimer += Time.deltaTime * fastDownTimeSpeed;
+            }
+            
+            if (_moveDownTimer >= moveDownDelay)
             {
                 _moveDownTimer = 0;
                 MoveShape(Vector2Int.down);
